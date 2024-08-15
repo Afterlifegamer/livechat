@@ -94,10 +94,12 @@
 <body>
   <div id="wrapper">
   	<div id="left_pannel">
-  		<div style="padding: 10px;">
+  		<div id="user_info" style="padding: 10px;">
   		<img id="profile_image"src="ui/images/user3.jpg">
   		<br>
-  		Kelly White
+  		<span id="Username">Username</span>
+  		<br>
+  		<span id="email">email@gamil.com</span>
   		<br>
   		<span style="font-size: 12px;opacity: 0.5;">kelly@yahoo.mail</span>
   		</div>
@@ -132,20 +134,34 @@
 	function _(element){
      return document.getElementById(element);
 	}
-	var label=_("label_chat");
-	label.addEventListener("click",function(){
-    var innerpannel=_("inner_left_pannel");
-	  var ajax=new XMLHttpRequest();
-    ajax.onload=function(){
-    	if(ajax.status==20||ajax.readyState==4)
-    	{
-    		innerpannel.innerHTML=ajax.responseText;
-    	}
-    }
-    ajax.open("Post","file.txt",true);
-    ajax.send();
-	});
+	function get_data(find,type){
+		var xml= new XMLHttpRequest();
+		xml.onload=function(){
+          if(xml.readyState==4||xml.status==200){
+          	handle_result(xml.responseText,type);
+          }
+		}
+		var data={}
+		data.find=find;
+		data.data_type=type;
+		data=JSON.stringify(data);
+		xml.open("POST","api.php",true);
+		xml.send(data);
 
+	}
+	function handle_result(result,type){
+		if(result.trim()!=""){
+			var obj=JSON.parse(result);
+			if(!obj.logged_in){
+				window.location="signup.php";
+			}
+			else{
+				alert(result);
+			}
+		}
+
+	}
+get_data({},"user_info");
 
 
 </script>

@@ -58,6 +58,15 @@
 		width: 100%;
 		color: white;
 	}
+	#error{
+		text-align: center;
+		padding: 0.5em; 
+		background-color: #ecaf91; 
+		color: white; 
+		display: none;
+		font-size: 12px;
+
+	}
 
 </style>	
 <body>
@@ -65,9 +74,10 @@
   	<div id="header">Whatsup
   		<div style="font-size:30px">Signup</div>
   	</div>
-
+    <div id="error" style=" "> some text</div>
   	<form id="myform">
   		<input type="text" name="username" placeholder="Username:"><br>
+  		<input type="text" name="email" placeholder="Email"><br>
   		<div style="padding:10px">
   		<br>Gender:<br>
   		<input type="radio" value='Male' name="gender"> Male<br>
@@ -87,6 +97,8 @@
 	var signup_button=_("signup_button");
 	signup_button.addEventListener("click",collect_data);
   function collect_data(){
+  	signup_button.disabled=true;
+  	signup_button.value="Loading...";
   	var myform=_("myform");
   	var input=myform.getElementsByTagName('INPUT');
   	var data={};
@@ -120,7 +132,9 @@
   	var xml=new XMLHttpRequest();
   	xml.onload=function(){
   		if(xml.readyState==4||xml.status==200){
-  			alert(xml.responseText);
+  			handle_result(xml.responseText);
+  			signup_button.disabled=false;
+  			signup_button.value="Signup";
   		}
   	}
   		data.data_type=type;
@@ -128,6 +142,17 @@
   		xml.open("POST","api.php",true);
   		xml.send(data_string);
   	 }
+  function handle_result(result){
+  	var data=JSON.parse(result);
+  	if(data.data_type == "info"){
+  		window.location="index.php";
+  	}
+  	else{
+  		var error = _("error");
+  		error.innerHTML =data.message;
+  		error.style.display = "block";
+  	}
 
+  }
 
 </script>
