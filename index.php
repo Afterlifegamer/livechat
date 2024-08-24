@@ -70,6 +70,7 @@
 		font-size: 40px;
 		text-align: center;
 		font-family: headFont;
+
 	}
 	#inner_left_pannel{
 		
@@ -89,7 +90,18 @@
 	#radio_settings:checked ~ #inner_right_pannel{
  			flex: 0;
 	}
-
+  #contact{
+  	width: 200px;
+  	height: 200px;
+  	margin: 10px;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+  }
+  #contact img{
+       width: 130px;
+       height:130px;
+  }
 </style>	
 <body>
   <div id="wrapper">
@@ -108,16 +120,17 @@
   		<br>
   		<div>
   			<label id="label_chat" for="radio_chat">Chat<img align="right"src="ui/icons/chat.png"></label>
-  			<label for="radio_contacts">Contact<img align="right"src="ui/icons/contacts.png"></label>
-  			<label for="radio_settings">Settings<img align="right"src="ui/icons/settings.png"></label>			
+  			<label for="radio_contacts" id="label_contact">Contact<img align="right"src="ui/icons/contacts.png"></label>
+  			<label for="radio_settings" id="label_settings">Settings<img align="right"src="ui/icons/settings.png"></label>
+  			<label id="logout" for="radio_logout">Logout<img align="right"src="ui/icons/logout_icon.png"></label>			
   		</div>
+  		
   	</div>
   	<div id="right_pannel">
   		<div id="header">Whatsup</div>
   		<div id="container" style="display:flex;">
   			<div id="inner_left_pannel">
-               
-  				 
+  				
   			</div>
   			<input type="radio" id="radio_chat" name="radiobutton"style="display: none;">
         <input type="radio" id="radio_contacts" name="radiobutton"style="display: none;">
@@ -134,10 +147,20 @@
 	function _(element){
      return document.getElementById(element);
 	}
+	var contacts=_("label_contact");
+	contacts.addEventListener("click",get_contacts);
+	var chats=_("label_chat");
+	chats.addEventListener("click",get_chats);
+	var settings=_("label_settings");
+	settings.addEventListener("click",get_settings);
+	var logout=_("logout");
+	logout.addEventListener("click",logout_user);
+
 	function get_data(find,type){
 		var xml= new XMLHttpRequest();
 		xml.onload=function(){
           if(xml.readyState==4||xml.status==200){
+
           	handle_result(xml.responseText,type);
           }
 		}
@@ -150,18 +173,54 @@
 
 	}
 	function handle_result(result,type){
+    
 		if(result.trim()!=""){
 			var obj=JSON.parse(result);
-			if(!obj.logged_in){
-				window.location="signup.php";
+			if(typeof(obj.logged_in)!='undefined'&& !(obj.logged_in)){
+				window.location="login.php";
 			}
 			else{
-				alert(result);
+				switch(obj.data_type){
+				  case "user_info":
+					var username=_("Username");
+					var email=_("email")
+					username.innerHTML= obj.username;
+					email.innerHTML=obj.email;
+					break;
+				case "contacts":
+            var inner_left_pannel=_("inner_left_pannel");
+            inner_left_pannel.innerHTML=obj.message;
+					break;
+					case "chats":
+            var inner_left_pannel=_("inner_left_pannel");
+            inner_left_pannel.innerHTML=obj.message;
+					break;
+					case "settings":
+            var inner_left_pannel=_("inner_left_pannel");
+            inner_left_pannel.innerHTML=obj.message;
+					break;
+				}
 			}
 		}
 
 	}
+	function logout_user(){
+		var answer=confirm("Are you sure you want to logout");
+		if(answer){
+		get_data({},"logout");
+		}
+	}
 get_data({},"user_info");
+
+function get_contacts(e){
+	get_data({},'contacts');
+}
+function get_chats(e){
+	get_data({},'chats');
+}
+function get_settings(e){
+	get_data({},'settings');
+}
 
 
 </script>

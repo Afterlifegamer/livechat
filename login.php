@@ -32,7 +32,7 @@
 		width: 100%;	
 		max-width: 400px;
 	}
-	input[type=text],input[type=password],input[type=button]{
+	input[type=text],input[type=password],input[type=submit]{
 		padding:10px;
 		width:98%;
 		margin: 10px;
@@ -40,7 +40,7 @@
 		border: solid 1px grey;
 
 	}
-	input[type=button]{
+	input[type=submit]{
 		width:103%;
 		cursor: pointer;
 		background-color: #2b5488;
@@ -74,16 +74,17 @@
   	<div id="header">Whatsup
   		<div style="font-size:30px">Login</div>
   	</div>
-    <div id="error" style=" "> some text</div>
+    <div id="error" > some text</div>
   	<form id="myform">
   		
   		<input type="text" name="email" placeholder="Email">
   		<br>
   		
-  		<input type="password" name="password" placeholder="Password:">
+  		<input type="password" name="password" placeholder="Password">
   		<br>
   		
-  		<input type="button" value="Login" id='login_button'>
+  		<input type="submit" value="Login" id='login_button'><br>
+  		<br><a href="signup.php" style="display: block; text-align: center; font-size: 15px; text-decoration: none;"> New User?Signup here</a>
   		
   	</form>
   </div>
@@ -95,7 +96,8 @@
 	}
 	var login_button=_("login_button");
 	login_button.addEventListener("click",collect_data);
-  function collect_data(){
+  function collect_data(e){
+  	e.preventDefault();
   	login_button.disabled=true;
   	login_button.value="Loading...";
   	var myform=_("myform");
@@ -137,6 +139,7 @@
   function handle_result(result){
   	var data= JSON.parse(result)
   	if(data.data_type == "info"){
+  		
   		window.location="index.php";
   	}
   	else{

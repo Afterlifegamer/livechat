@@ -81,11 +81,13 @@
   		<div style="padding:10px">
   		<br>Gender:<br>
   		<input type="radio" value='Male' name="gender"> Male<br>
-  		<input type="radio" value='FeMale' name="gender"> Female<br>
+  		<input type="radio" value='Female' name="gender"> Female<br>
   		</div>
   		<input type="password" name="password" placeholder="Password:"><br>
   		<input type="password" name="password2" placeholder="Retype Password:"><br>
   		<input type="button" value="Sign Up" id='signup_button'><br>
+  		<br><a href="login.php" style="display: block; text-align: center; font-size: 15px; text-decoration: none;"> Have an account?Login here</a>
+  		
   	</form>
   </div>
 </body>	
@@ -115,6 +117,7 @@
   	   case 'email':
   	   	data.email=input[i].value;
   	   	break;
+  	   
   	   case 'gender':
   	   	 if(input[i].checked){
   	   	data.gender=input[i].value;
@@ -144,7 +147,7 @@
   	 }
   function handle_result(result){
   	var data=JSON.parse(result);
-  	if(data.data_type == "info"){
+  	if(data.data_type == "signup"){
   		window.location="index.php";
   	}
   	else{
